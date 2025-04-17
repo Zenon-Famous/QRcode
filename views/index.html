@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css"/>
+  <title>Gerador de QR Code</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Gerador de QR Code</h1>
+    <input type="text" id="linkInput" placeholder="Digite o link aqui..." />
+    <button onclick="gerarQRCode()">Gerar QR Code</button>
+    <div id="qrcode"></div>
+  </div>
+
+  <script>
+    function gerarQRCode() {
+      const link = document.getElementById('linkInput').value;
+
+      if (!link) {
+        alert('Por favor, insira um link válido.');
+        return;
+      }
+
+      fetch(`/qrcode?link=${encodeURIComponent(link)}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erro ao gerar QR Code');
+          }
+          return response.text();
+        })
+        .then(html => {
+          document.getElementById('qrcode').innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Ocorreu um erro ao gerar o QR Code.');
+        });
+    }
+  </script>
+</body>
+</html>
